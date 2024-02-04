@@ -24,7 +24,7 @@ buildscript {
 plugins {
     application
     idea
-    kotlin("jvm") version "1.9.21"
+    kotlin("jvm") version "1.9.22"
     id("io.ktor.plugin") version "2.3.7"
     id("org.jooq.jooq-codegen-gradle") version "3.19.3"
     id("org.openapi.generator") version "7.2.0"
