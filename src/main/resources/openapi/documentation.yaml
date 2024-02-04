@@ -1,0 +1,101 @@
+openapi: "3.0.3"
+info:
+  title: "idoubtthat api"
+  description: "The idoubtthat reset api"
+  version: "1.0.0"
+servers:
+  - url: "http://0.0.0.0:8080"
+paths:
+  /api/v1/user:
+    post:
+      description: "Creates a new user"
+      requestBody:
+        description: "A JSON object containing user information"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                type: "string"
+                format: uuid
+  /api/v1/user/{id}:
+    get:
+      description: "Returns a user by its ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/User"
+  /api/v1/citation:
+    post:
+      description: "Creates a new citation"
+      requestBody:
+        description: "A JSON object containing citation information"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Citation"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+                format: uuid
+  /api/v1/citation/{id}:
+    get:
+      description: "Returns a citation by its ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Citation"
+components:
+  schemas:
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+    Citation:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        url:
+          type: "string"
+        commentary:
+          type: "string"
+        author:
+          type: "string"
+          format: "uuid"
