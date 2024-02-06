@@ -2,10 +2,11 @@ package idoubtthat.pgp
 
 import idoubtthat.values.Signable
 import idoubtthat.values.SignedReource
-import org.bouncycastle.asn1.x509.ObjectDigestInfo.publicKey
 import org.bouncycastle.openpgp.*
 import org.bouncycastle.openpgp.operator.bc.BcKeyFingerprintCalculator
 import org.bouncycastle.openpgp.operator.bc.BcPGPContentVerifierBuilderProvider
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentSignerBuilder
+import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder
 import java.io.*
 import java.security.SignatureException
 
@@ -53,6 +54,19 @@ object PGPUtils {
         return pgpPub.publicKey
     }
 
+    fun sign(content: String, secretKey: PGPSecretKey, passphrase: String): PGPSignature {
+        val decryptor = JcePBESecretKeyDecryptorBuilder().setProvider("BC").build(passphrase.toCharArray())
+        val privateKey = secretKey.extractPrivateKey(decryptor)
+        val signatureGenerator = PGPSignatureGenerator(
+            JcaPGPContentSignerBuilder(
+                secretKey.getPublicKey().getAlgorithm(),
+                PGPUtil.SHA1
+            ).setProvider("BC")
+        )
+        signatureGenerator.init(PGPSignature.BINARY_DOCUMENT, privateKey)
+        signatureGenerator.update(content.toByteArray(Charsets.UTF_8))
+        return signatureGenerator.generate()
+    }
 }
 
 
