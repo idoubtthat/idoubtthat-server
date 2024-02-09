@@ -16,7 +16,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.jooq:jooq-codegen:3.16.2")
+        classpath("org.jooq:jooq-codegen:3.19.3")
         classpath("mysql:mysql-connector-java:8.0.33")
     }
 }
