@@ -25,20 +25,8 @@ jobs:
       - name: Build Kotlin project
         run: ./gradlew assemble
 
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-
-      - name: Set up Docker Compose
-        run: |
-          sudo rm /usr/local/bin/docker-compose
-          curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-
-      - name: Build and run Docker Compose
-        run: |
-          docker-compose up -d
+      - name: Docker Compose Action
+        uses: isbang/compose-action@v1.5.1
 
       - name: Run unit tests
         run: ./gradlew test
