@@ -139,7 +139,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.4.14")
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
-    implementation("io.swagger:swagger-annotations:1.5.3")
+    implementation("io.swagger:swagger-annotations:1.6.13")
     implementation("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.16.1")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
     implementation("com.zaxxer:HikariCP:5.1.0")
