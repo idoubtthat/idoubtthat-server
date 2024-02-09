@@ -146,7 +146,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:$flyway_version")
     implementation("com.sksamuel.hoplite:hoplite-hocon:2.7.5")
     implementation("org.glassfish.jersey.containers:jersey-container-jetty-http:2.23.1")
-    implementation("org.glassfish.jersey.media:jersey-media-json-jackson:2.23.1")
+    implementation("org.glassfish.jersey.media:jersey-media-json-jackson:3.1.5")
     implementation("org.jooq:jooq:$jooq_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
