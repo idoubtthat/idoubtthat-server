@@ -140,7 +140,7 @@ dependencies {
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:2.1.6")
     implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
     implementation("io.swagger:swagger-annotations:1.5.3")
-    implementation("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9")
+    implementation("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.16.1")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("org.flywaydb:flyway-core:$flyway_version")
