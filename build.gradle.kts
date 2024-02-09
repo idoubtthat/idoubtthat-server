@@ -151,7 +151,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testImplementation ("org.junit.jupiter:junit-jupiter-engine:5.7.1")
-    integrationTestImplementation("com.squareup.okhttp3:okhttp:4.11.0")
+    integrationTestImplementation("com.squareup.okhttp3:okhttp:4.12.0")
     integrationTestImplementation("io.ktor:ktor-client:1.3.2-1.4-M2")
     integrationTestImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
     integrationTestImplementation ("org.junit.jupiter:junit-jupiter-engine:5.7.1")
