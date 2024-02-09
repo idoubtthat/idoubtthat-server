@@ -144,7 +144,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("org.flywaydb:flyway-core:$flyway_version")
-    implementation("com.sksamuel.hoplite:hoplite-hocon:2.5.2")
+    implementation("com.sksamuel.hoplite:hoplite-hocon:2.7.5")
     implementation("org.glassfish.jersey.containers:jersey-container-jetty-http:2.23.1")
     implementation("org.glassfish.jersey.media:jersey-media-json-jackson:2.23.1")
     implementation("org.jooq:jooq:$jooq_version")
