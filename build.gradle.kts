@@ -152,7 +152,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testImplementation ("org.junit.jupiter:junit-jupiter-engine:5.7.1")
     integrationTestImplementation("com.squareup.okhttp3:okhttp:4.11.0")
-    integrationTestImplementation("io.ktor:ktor-client:1.3.2-1.4-M2")
+    integrationTestImplementation("io.ktor:ktor-client:3.0.0-beta-1")
     integrationTestImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
     integrationTestImplementation ("org.junit.jupiter:junit-jupiter-engine:5.7.1")
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin
