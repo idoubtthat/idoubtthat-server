@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -25,4 +26,8 @@ object Serializer {
                 it.addDeserializer(LocalDate::class.java, LocalDateDeserializer(DateTimeFormatter.ISO_DATE))
             }
         )
+
+    fun <T> write(value: T): String = mapper.writeValueAsString(value)
+
+    inline fun <reified T> read(content: String): T = mapper.readValue(content)
 }

@@ -1,17 +1,24 @@
 package pgp
 
+import idoubtthat.pgp.KeyStore
+import idoubtthat.pgp.PGP
 import idoubtthat.pgp.PGPUtils
+import idoubtthat.values.*
+import org.bouncycastle.openpgp.PGPPublicKey
+import org.bouncycastle.openpgp.PGPSecretKey
 import org.junit.jupiter.api.Test
+import java.time.Instant
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class PGPTest {
     @Test
     fun testKeygen() {
-        val sec = PGPUtils.generate(TestData.passphrase)
+        val sec = PGPUtils.generate(TestData.user, TestData.passphrase)
         val s = PGPUtils.secretKeyToArmoredString(sec)
         val readSec = PGPUtils.secretKeyFromArmoredString(s)
-        assertEquals(sec.keyID, readSec.keyID)
+        assertEquals(sec.secretKey.keyID, readSec.keyID)
+        assertEquals(TestData.user, readSec.userIDs.next())
     }
 
     @Test
@@ -31,9 +38,56 @@ class PGPTest {
         val valid = PGPUtils.verify(sig, pubKey, TestData.text)
         assertTrue(valid)
     }
+
+    @Test
+    fun testPGP() {
+        val pgp = PGP(MemoryKeyStore())
+        val sec = PGPUtils.generate(TestData.user, TestData.passphrase)
+        pgp.keyStore.store(sec.secretKey)
+        val resource = Resource(
+            "This repo is dope",
+            "git@github.com:idoubtthat/idoubtthat-server",
+            Instant.now(),
+            ResourceType.GITHUB
+        )
+        val statement = Signable(
+            resource,
+            Instant.now(),
+            sec.publicKey.userIDs.next(),
+            ValidityClaims(isTrue = true, isSupported = false, isGood = true)
+        )
+        val signed = pgp.sign(statement, TestData.passphrase)
+        val isValid = pgp.isValid(signed)
+        assertTrue(isValid)
+    }
+}
+
+class MemoryKeyStore(): KeyStore {
+    val keys = mutableMapOf<Long, PGPPublicKey>()
+    val secret = mutableMapOf<Long, PGPSecretKey>()
+    override fun store(key: PGPPublicKey) {
+        keys[key.keyID] = key
+    }
+
+    override fun store(key: PGPSecretKey) {
+        secret[key.keyID] = key
+        keys[key.keyID] = key.publicKey
+    }
+
+    override fun get(keyId: Long): PGPPublicKey? = keys[keyId]
+
+    override fun getSecret(keyId: Long): PGPSecretKey? = secret[keyId]
+
+    override fun getUser(userId: String): User? {
+        val sec = secret.values.find { s -> s.userIDs.asSequence().any { it == userId } }
+        val pubs = keys.values.filter { s -> s.userIDs.asSequence().any { it == userId } }
+        if (pubs.isEmpty()) return null
+        return User(userId, pubs.map { it.keyID }.toSet(), sec?.keyID)
+    }
 }
 
 object TestData {
+    val user = "Tom Doubter <i@doubtthat.info>"
     val passphrase = "i doubt that"
 
 
@@ -130,30 +184,39 @@ object TestData {
     """.trimIndent()
 
     val testSecretKey = """
-    -----BEGIN PGP MESSAGE-----
+    -----BEGIN PGP PRIVATE KEY BLOCK-----
     Version: BCPG v1.77.00
     
-    nQOBBGXG42cRCACVR1z12T5ZbD/NHZAq3QL0J/XzxyEDE7tF+01bsuX+HL1njNS7
-    3YTJg2vh8xwHd3Ja62wvw4uF9IB2+na82BRsyJpvsvcG3XGYmMIIPcjYlvhAYuLJ
-    yU0TewVKjYCWrbjVGVI5juyoUqCvEt+D5HWqZdTsDDipVg1WYRhv+Yufyetg7uiw
-    MDdrI2vHO+Os29dP1hwdJHX6MHe48IBGeIH/fhylb+4GbXlQat5R7btUQ6Vjkn28
-    S6UgCGdGF1yIhZJevGTGFHkGdzSWmQy3FOxmcwTiYfruM7PL3wCODD+pBlDZfTkJ
-    ySdb9KyG/8s9A+bfyK2lk0JC3W07zKKkBssLAQD4GDZoul/Fuwa1mB5ti3ldMLiX
-    jUPKDsVy434Jk5qXcwf/Qt67naWz2IzJVuCHh+w/Ogm7pfSLiJp0qvUxdKoPvn48
-    W4/NelO+9WOw6YVgMolgqVF/QBTTMl/Hlivx4Ek3DXbRMUp2E355Lz8NuFnQleSl
-    uTICTweezy7wnHl0UrB3DhNQeC7Vfd95SXnc7yPLlvGDBhllxOvJPJxxxWuSWVWn
-    X5TMzxRJrEPVhtC+7kMlGwsihzSdaN4NFEQD8T6AL0FG2ILgV68ZtvYnXGZ2yPoO
-    PKJxOjJX/Rsn0GOfaV40fY0c+ayBmibKmwTLDrm3sDWYjRW7rGUhKlUjnPx+WPrj
-    jXJQq5mR/7yXE0Al/ozgTEOZrZZWm+kaVG9JeGk8egf/W6rzMQWfr4K6mZaThETv
-    6U7DEWUrCqU/wKvLF/zRm62YEDMxjl/51JxNqOu/RT0H9Ow4+ZLI677VeGcbzEid
-    qVfr3zG2lv7kQVfgWeX1qwN7mKNtwZMCzPYcgokmcI/TG6lT+Trwp0p75FARFrlF
-    jH58TZqmCvvbTqa8Q0YFOOTEoV1e6CYxzkmMIbK2ECfg5FZUXbJDhMTO9Ocdn0xV
-    QGiwufKBAihV8i4S/y3O1cWW+5yeTIFu+TAfTDtH1Dth4/VemKvB4mraLsjesFT5
-    yKl/10Uz7VpHYBUnipucWcefvcuKfRySCwgWhNIc665yUsTJwdhNDzVc3ZlN/sTl
-    7/4JAwIhaFL3sXDrYGCPqZXi1X6pskyDEako5nexV4KsTVLL05JNF0nBtEDixsGJ
-    veWfBMV6JcaNPcOZAP8GZIbXwte2ykM2KuzbCh44GJuSa+y9
-    =iLzT
-    -----END PGP MESSAGE-----
+    lQPGBGXHqKEDCACvySnPZiA3X9790jUE155BbqZmAWW9oe+RDTm3RiRrbd9iE7ba
+    d0jcGVmpokQcnR0oVw7tsl/ZLuHoKn8FNm3VJwoJkuY1bqqHa75ftuIU9qV4PZ5o
+    VueHcfyhDJrOoMnk2NyZn0Pcshpbc1CAjhMA6V3rfO5OwEd9WmkZn3kybHdQtG1Z
+    F4KnRSJ29SDoM9hPhj1k7sQsPL9Mi1J8xshvJXr5RBeQ+vWXNO7DLaAMOmCRisZd
+    i3HgysEHFYMCeIi2ngJg5g6cE+AspOuRgoUTwyzusDuZTlwAmBErrQ0lR6jAAThp
+    BF4HN1PecgE1UJO8DNVCkmCJK84nzydl//SJABEBAAH+CQMC5Tk1673lcbhgcJUa
+    am4yUPWpJlbd0KxoQ/dO/9WkOrUi8Xq9mb6vExe+t5uW/NZImz1Z/VXDZm3RafCf
+    TIRxlxlMAsqcsYiIICUm/oHdd0wVHE8ecUy9G0WdXYgRFZwHbnbz3D8IZ01AIfLF
+    RkkwBC5vyZ97yhoXgMv+V1PPpnd86kkcXzimGxFTlOmTFdMr+CtjrcU6rRr8hdis
+    6JIgOAmHvODb+ApHsb1ESHPQ2wiezJY9jLiQ3ryRGJyWbUSw7xVsCt9Z4X7oJqxw
+    NknpcYPzGWHhx3q5K0k1912V3ppP5YBAjGvdH9yQdRQfsKY8uqX3duHkMZNKBsqz
+    sKXHWJfybT0WEfE6MZahAx9Kxldp5nCmVTkAP8GOcOdoXECcQaY8uD3iIJ/ggNrV
+    l94t8Uh2tz9USaWS7uffA32903KoFRvuhbEJ6ox2gW3YUSguJftjXc2YFLWTvTIL
+    GTF65b3fzfbKQT02mBXH4kNqOQCbUXZQnGysYQBNcox+zhSkCbx6kl0TS1kUUVtD
+    SEQXiCDzBXRnD06nOg+8hxilXUqlefpnIl1UzJSP56hFe0/guuuhr128GryJ/ciH
+    VbgBa6NYfxOtbeIQMedQ+tL3R5fCkebIDplwQjHACT/pD2yrWU8rqgT8AOJKdHkb
+    celaM9/abWdbwxK4rj8TalTAZYKxb8lv1Bzc5LUZRvoTB9DauyO8s5BlH1L1yHHT
+    EI8y61JmMgWJ9hUusz+OcJyXRr7tVC011Ma5MfvzW3VuUidC/0XAD8ptKHlmDjTf
+    /o8ZC7pi9yorIpkvVdRRn9SxSixNIKw/s1g3MaMW6kQIS8ju2gs7l0vmnF4llCJ3
+    HnjRHxxEx8YSAo+seOzvfp97vP3P+vV7XtAbT7ggArlnJIZ1G4bc+6TNG34j4crg
+    jOxaMMOrxA3ZtB5Ub20gRG91YnRlciA8aUBkb3VidHRoYXQuaW5mbz6JASYEEwMC
+    ABAFAmXHqKECGwMDFQgCAgsJAAoJEPWj0ToOktHuSyYH/2x/qJ1h1S67jFzV8w2q
+    D2DDluDEl21pLUGTDY7PECluqOFGlXPoM1ttaGeDIYLKPdQOLpjM2Tpck+WO6Dn4
+    NlnCDWN99/HZSv7eDPy6AfoXERdpYynQeddqTHnAFprHWXhhRpF6yXeEUt5Xraat
+    05c/FR9rED7MM8pjl1Y+7rOP9cV9Yrr7naUScesRLMRFpDgieQjlAo7j8e8gJ+uh
+    R3fQOeHe3QPw7exsgMgMMCfdbPdxY1sjGUbdCrlXtfySLNllSGb8kTWBx4U/IhR1
+    ujHDl1rXCKkFifCHfLy7jVUt1wingqurWosIMZgqJquM244s/n0dPr/+TzgTp+cN
+    V1A=
+    =CAme
+    -----END PGP PRIVATE KEY BLOCK-----
     """.trimIndent()
        
 
