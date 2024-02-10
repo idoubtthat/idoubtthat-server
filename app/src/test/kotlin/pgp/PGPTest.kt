@@ -33,10 +33,14 @@ class PGPTest {
     @Test
     fun testVerify() {
         val pubKey = PGPUtils.publicKeyFromArmoredString(TestData.publicKey)
-        val sig = PGPUtils.readDetachedSignature(TestData.ascSig)
+        val sig = PGPUtils.readDetachedSignature(TestData.ascSigGic)
         assertEquals(pubKey.keyID, sig.keyID)
         val valid = PGPUtils.verify(sig, pubKey, TestData.text)
         assertTrue(valid)
+        val sig2 = PGPUtils.readDetachedSignature(TestData.ascSigTom)
+        assertEquals(pubKey.keyID, sig.keyID)
+        val valid2 = PGPUtils.verify(sig, pubKey, TestData.text)
+        assertTrue(valid2)
     }
 
     @Test
@@ -92,7 +96,7 @@ object TestData {
 
 
     val text = "some text\n"
-    val ascSig = """
+    val ascSigGic = """
         -----BEGIN PGP SIGNATURE-----
 
         iQIzBAABCAAdFiEEaP6XFSNMAgpwE+A8jL9PmNg8/IoFAmXBtDYACgkQjL9PmNg8
@@ -109,6 +113,20 @@ object TestData {
         g/7z3eq6SjjQh56+p/E3eC+uglCv9KaDx3y2Xg9axLhmExEMZ7s=
         =2Xbm
         -----END PGP SIGNATURE----
+    """.trimIndent()
+
+    val ascSigTom = """
+        -----BEGIN PGP SIGNATURE-----
+
+        iQEzBAADCgAdFiEEo891PL+bKkv+wyUr9aPROg6S0e4FAmXH3WkACgkQ9aPROg6S
+        0e4tjwf+MzQt+VhiwEqCnJGaanbTOEQWrcgO6vd8cYAc3CZBgM8lUaWVB4YvSpgx
+        132uFncRYJ4u3l+ANttv9Hb6f9lOaYDJBjbL5cvfCYWC1PfGRg0ECnwW+7Q82jPx
+        wgeMTkg3PN3USbX0D/vSGd0dzyqtQnuULXAzpxbE0VIwDbrwwSEqml5drAtpqd8N
+        CJM2ow/y1nvD8B+0s39pSkqLaMFFoh42sJiONVaKb8UepKzDm6gjnqONX2ar0bwT
+        3QhZ+cqvbRiqDrE8OaVrI6POz9Mt5FDMey+q18/Es5bfmGK1KHZk0eTtR5k2vkCL
+        sC/9TITbI1R0pZMi89Nse9YJ6CxNxA==
+        =JAsI
+        -----END PGP SIGNATURE-----
     """.trimIndent()
 
     val publicKey = """
