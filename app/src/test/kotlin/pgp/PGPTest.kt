@@ -7,6 +7,23 @@ import kotlin.test.assertTrue
 
 class PGPTest {
     @Test
+    fun testKeygen() {
+        val sec = PGPUtils.generate(TestData.passphrase)
+        val s = PGPUtils.secretKeyToArmoredString(sec)
+        val readSec = PGPUtils.secretKeyFromArmoredString(s)
+        assertEquals(sec.keyID, readSec.keyID)
+    }
+
+    @Test
+    fun testSignAndVerify() {
+        val sec = PGPUtils.secretKeyFromArmoredString(TestData.testSecretKey)
+        val message = "a test message to sign"
+        val sig = PGPUtils.sign(message, sec, TestData.passphrase)
+        val valid = PGPUtils.verify(sig, sec.publicKey, message)
+        assertTrue(valid)
+    }
+
+    @Test
     fun testVerify() {
         val pubKey = PGPUtils.publicKeyFromArmoredString(TestData.publicKey)
         val sig = PGPUtils.readDetachedSignature(TestData.ascSig)
@@ -17,6 +34,9 @@ class PGPTest {
 }
 
 object TestData {
+    val passphrase = "i doubt that"
+
+
     val text = "some text\n"
     val ascSig = """
         -----BEGIN PGP SIGNATURE-----
@@ -107,6 +127,33 @@ object TestData {
       Nr2FBr81/L9lmIEMur99H+wKJQTR3AmXgLDrRPUEUUYIcKu+1n9Q0KPBvP+J
       =Mgkw
       -----END PGP PUBLIC KEY BLOCK-----
+    """.trimIndent()
+
+    val testSecretKey = """
+    -----BEGIN PGP MESSAGE-----
+    Version: BCPG v1.77.00
+    
+    nQOBBGXG42cRCACVR1z12T5ZbD/NHZAq3QL0J/XzxyEDE7tF+01bsuX+HL1njNS7
+    3YTJg2vh8xwHd3Ja62wvw4uF9IB2+na82BRsyJpvsvcG3XGYmMIIPcjYlvhAYuLJ
+    yU0TewVKjYCWrbjVGVI5juyoUqCvEt+D5HWqZdTsDDipVg1WYRhv+Yufyetg7uiw
+    MDdrI2vHO+Os29dP1hwdJHX6MHe48IBGeIH/fhylb+4GbXlQat5R7btUQ6Vjkn28
+    S6UgCGdGF1yIhZJevGTGFHkGdzSWmQy3FOxmcwTiYfruM7PL3wCODD+pBlDZfTkJ
+    ySdb9KyG/8s9A+bfyK2lk0JC3W07zKKkBssLAQD4GDZoul/Fuwa1mB5ti3ldMLiX
+    jUPKDsVy434Jk5qXcwf/Qt67naWz2IzJVuCHh+w/Ogm7pfSLiJp0qvUxdKoPvn48
+    W4/NelO+9WOw6YVgMolgqVF/QBTTMl/Hlivx4Ek3DXbRMUp2E355Lz8NuFnQleSl
+    uTICTweezy7wnHl0UrB3DhNQeC7Vfd95SXnc7yPLlvGDBhllxOvJPJxxxWuSWVWn
+    X5TMzxRJrEPVhtC+7kMlGwsihzSdaN4NFEQD8T6AL0FG2ILgV68ZtvYnXGZ2yPoO
+    PKJxOjJX/Rsn0GOfaV40fY0c+ayBmibKmwTLDrm3sDWYjRW7rGUhKlUjnPx+WPrj
+    jXJQq5mR/7yXE0Al/ozgTEOZrZZWm+kaVG9JeGk8egf/W6rzMQWfr4K6mZaThETv
+    6U7DEWUrCqU/wKvLF/zRm62YEDMxjl/51JxNqOu/RT0H9Ow4+ZLI677VeGcbzEid
+    qVfr3zG2lv7kQVfgWeX1qwN7mKNtwZMCzPYcgokmcI/TG6lT+Trwp0p75FARFrlF
+    jH58TZqmCvvbTqa8Q0YFOOTEoV1e6CYxzkmMIbK2ECfg5FZUXbJDhMTO9Ocdn0xV
+    QGiwufKBAihV8i4S/y3O1cWW+5yeTIFu+TAfTDtH1Dth4/VemKvB4mraLsjesFT5
+    yKl/10Uz7VpHYBUnipucWcefvcuKfRySCwgWhNIc665yUsTJwdhNDzVc3ZlN/sTl
+    7/4JAwIhaFL3sXDrYGCPqZXi1X6pskyDEako5nexV4KsTVLL05JNF0nBtEDixsGJ
+    veWfBMV6JcaNPcOZAP8GZIbXwte2ykM2KuzbCh44GJuSa+y9
+    =iLzT
+    -----END PGP MESSAGE-----
     """.trimIndent()
        
 
