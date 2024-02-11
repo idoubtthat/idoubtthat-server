@@ -21,7 +21,9 @@ hamcrest = "2.2"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
-junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
+junit_jupiter_engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
+junit_kotlin = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
+junit_runtime = { module = "org.junit.platform:junit-platform-launcher" }
 jackson_jsr310 = {  module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson"  }
 jackson_kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 bouncycastle = { module = "org.bouncycastle:bcpg-jdk18on", version.ref = "bouncycastle" }

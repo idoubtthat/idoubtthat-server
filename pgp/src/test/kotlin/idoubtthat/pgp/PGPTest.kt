@@ -39,7 +39,8 @@ class PGPTest {
         assertTrue(valid)
         val sig2 = PGPUtils.readDetachedSignature(TestData.ascSigTom)
         assertEquals(pubKey.keyID, sig.keyID)
-        val valid2 = PGPUtils.verify(sig, pubKey, TestData.text)
+        val tomKey = PGPUtils.secretKeyFromArmoredString(TestData.testSecretKey).publicKey
+        val valid2 = PGPUtils.verify(sig2, tomKey, TestData.text)
         assertTrue(valid2)
     }
 
@@ -117,15 +118,15 @@ object TestData {
 
     val ascSigTom = """
         -----BEGIN PGP SIGNATURE-----
-
-        iQEzBAADCgAdFiEEo891PL+bKkv+wyUr9aPROg6S0e4FAmXH3WkACgkQ9aPROg6S
-        0e4tjwf+MzQt+VhiwEqCnJGaanbTOEQWrcgO6vd8cYAc3CZBgM8lUaWVB4YvSpgx
-        132uFncRYJ4u3l+ANttv9Hb6f9lOaYDJBjbL5cvfCYWC1PfGRg0ECnwW+7Q82jPx
-        wgeMTkg3PN3USbX0D/vSGd0dzyqtQnuULXAzpxbE0VIwDbrwwSEqml5drAtpqd8N
-        CJM2ow/y1nvD8B+0s39pSkqLaMFFoh42sJiONVaKb8UepKzDm6gjnqONX2ar0bwT
-        3QhZ+cqvbRiqDrE8OaVrI6POz9Mt5FDMey+q18/Es5bfmGK1KHZk0eTtR5k2vkCL
-        sC/9TITbI1R0pZMi89Nse9YJ6CxNxA==
-        =JAsI
+        
+        iQEzBAADCgAdFiEEo891PL+bKkv+wyUr9aPROg6S0e4FAmXJIzoACgkQ9aPROg6S
+        0e6M7Af/VyZrUwUp+uvtrslle1iTANcV26dTR3Fzs6LQ1A1Ztl+51F9PbNa7227Q
+        ZubysbdHDa6zSjYDOlgS6pcLEnELG77D/Q9/K1Szf7jdRvsXYBZ/ZER9RJLNz4QO
+        qJh/90hs6+an8gAHGwaiK+fAWhRVSRAKRlZnu/gauDsS/lbYiMKOn6MuD86b9V5Z
+        hmr+Pwq2KMinq1p79IgyUsEicWMO3vi2MQryU8CA1I2vjDHbHyZRgRros8Li9TJT
+        CJsV1KsoIeoqCAZAq+hVWFJmEqYDF+5JgcETVl7sPUIVKiOEjP0wHtXQZNu2GoSp
+        OP8pG3mRG/486JY+kOz6elCN8sNocw==
+        =9UMp
         -----END PGP SIGNATURE-----
     """.trimIndent()
 

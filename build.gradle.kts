@@ -1,6 +1,7 @@
 group = "info.idoubtthat"
 version = "1.0-SNAPSHOT"
 
+
 buildscript {
     repositories {
         mavenLocal()
@@ -10,14 +11,11 @@ buildscript {
 
 plugins {
     idea
-    java
-    libs.plugins.kotlin.jvm
+    alias(libs.plugins.kotlin.jvm)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-}
+java.sourceCompatibility = JavaVersion.VERSION_21
+java.targetCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenCentral()
