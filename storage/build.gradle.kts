@@ -1,6 +1,5 @@
 import org.jooq.meta.jaxb.*
 
-val ktor_version: String by project
 val kotlin_version: String by project
 val flyway_version: String by project
 val exposed_version: String by project

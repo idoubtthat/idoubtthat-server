@@ -1,6 +1,6 @@
 package info.idoubtthat.db
 
-import db.op.citation.CreateCitationOp
+import info.idoubtthat.db.op.citation.CreateCitationOp
 import info.idoubtthat.db.op.citation.GetCitationOp
 import info.idoubtthat.db.op.citation.UpdateCitationOp
 import info.idoubtthat.db.op.user.CreateUserOp

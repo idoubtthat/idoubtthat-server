@@ -1,4 +1,4 @@
-package db.op.citation
+package info.idoubtthat.db.op.citation
 
 import info.idoubtthat.db.op.WriteOp
 import info.idoubtthat.db.schema.tables.references.CITATIONS

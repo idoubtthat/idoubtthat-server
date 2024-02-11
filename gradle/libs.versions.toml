@@ -2,10 +2,22 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
+kotlin = "1.9.20"
 guava = "33.0.0-jre"
 junit-jupiter-engine = "5.10.0"
 jackson = "2.16.1"
 bouncycastle = "1.77"
+ktor = "2.3.7"
+exposed = "0.41.1"
+h2 = "2.2.220"
+hikaricp = "5.0.1"
+flyway = "7.15.0"
+jooq = "3.19.3"
+logback = "1.4.12"
+slf4j = "2.0.9"
+log4j = "2.19.0"
+junit = "5.8.1"
+hamcrest = "2.2"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
@@ -15,4 +27,4 @@ jackson_kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin"
 bouncycastle = { module = "org.bouncycastle:bcpg-jdk18on", version.ref = "bouncycastle" }
 
 [plugins]
-jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.20" }
+kotlin_jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
