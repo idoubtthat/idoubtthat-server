@@ -92,7 +92,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:10.7.2")
     implementation("com.sksamuel.hoplite:hoplite-hocon:2.7.5")
     implementation("org.jooq:jooq:3.19.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
     testImplementation ("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 
 }
