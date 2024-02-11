@@ -4,6 +4,7 @@ import info.idoubtthat.db.DataServiceMysqlImpl
 import info.idoubtthat.db.DatabaseManager
 import info.idoubtthat.models.CitationDAO
 import info.idoubtthat.models.UserDAO
+import info.idoubtthat.server.DatabaseConfig
 import info.idoubtthat.server.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Disabled
@@ -12,7 +13,11 @@ import java.util.UUID
 
 
 class DataServiceMysqlImplTest {
-    private val databaseManager = DatabaseManager(Environment())
+    private val env = Environment(
+        db = DatabaseConfig(port = 9217)
+    )
+
+    private val databaseManager = DatabaseManager(env)
     val dataServiceMysqlImpl = DataServiceMysqlImpl(databaseManager)
 
 

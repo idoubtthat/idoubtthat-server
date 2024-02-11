@@ -14,7 +14,7 @@ services:
   mysql:
     image: mysql:8
     ports:
-      - 3306:3306
+      - 9217:3306
     environment:
       MYSQL_DATABASE: "citation"
       MYSQL_INITDB_SKIP_TZINFO: 1
