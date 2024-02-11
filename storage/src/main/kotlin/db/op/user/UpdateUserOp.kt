@@ -4,7 +4,6 @@ import info.idoubtthat.db.op.WriteOp
 import info.idoubtthat.db.schema.tables.references.USERS
 import info.idoubtthat.models.UserDAO
 import org.jooq.Configuration
-import org.jooq.impl.DSL
 import java.time.LocalDateTime
 
 class UpdateUserOp(dao: UserDAO) : WriteOp<UserDAO>(dao) {
