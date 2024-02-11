@@ -10,12 +10,11 @@ import org.bouncycastle.bcpg.sig.KeyFlags
 import org.bouncycastle.crypto.generators.RSAKeyPairGenerator
 import org.bouncycastle.crypto.params.RSAKeyGenerationParameters
 import org.bouncycastle.openpgp.*
-import org.bouncycastle.openpgp.PGPException
 import org.bouncycastle.openpgp.operator.PGPDigestCalculator
 import org.bouncycastle.openpgp.operator.bc.*
-import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentSignerBuilder
 import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder
 import java.io.*
+import java.lang.IllegalArgumentException
 import java.math.BigInteger
 import java.security.SecureRandom
 import java.security.Security
@@ -141,6 +140,14 @@ object PGPUtils {
         return pgpPub.publicKey
     }
 
+    fun publicKeyToArmoredString(key: PGPPublicKey): String {
+        val baos = ByteArrayOutputStream()
+        val out = ArmoredOutputStream(baos)
+        key.encode(out)
+        out.close()
+        return String(baos.toByteArray(), Charsets.US_ASCII)
+    }
+
     fun secretKeyFromArmoredString(key: String): PGPSecretKey {
         val ins = PGPUtil.getDecoderStream(ByteArrayInputStream(key.toByteArray(Charsets.US_ASCII)))
         val pgpSec = PGPSecretKeyRing(ins, fingerprintCalculator)
@@ -180,6 +187,27 @@ object PGPUtils {
         val signature = signatureGenerator.generateCertification(id, toSign)
         return PGPPublicKey.addCertification(toSign, id, signature)
     }
-}
 
+    fun userEmail(userId: String): String {
+        val emailRegexString = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                "\\@" +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                "(" +
+                "\\." +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                ")+"
+        val emailInId = Regex("<($emailRegexString)>\$")
+        val stdId = emailInId.find(userId)
+        if (stdId != null) {
+            return stdId.groups[1]!!.value
+        }
+
+        val emailRegex = Regex(emailRegexString)
+        val bareEmail = emailRegex.matchEntire(userId)
+        if (bareEmail != null) {
+            return userId
+        }
+        throw IllegalArgumentException("No email")
+    }
+}
 
