@@ -4,10 +4,15 @@
 [versions]
 guava = "33.0.0-jre"
 junit-jupiter-engine = "5.10.0"
+jackson = "2.16.1"
+bouncycastle = "1.77"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
+jackson_jsr310 = {  module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson"  }
+jackson_kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+bouncycastle = { module = "org.bouncycastle:bcpg-jdk18on", version.ref = "bouncycastle" }
 
 [plugins]
 jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.20" }
