@@ -10,8 +10,10 @@ import org.bouncycastle.bcpg.sig.KeyFlags
 import org.bouncycastle.crypto.generators.RSAKeyPairGenerator
 import org.bouncycastle.crypto.params.RSAKeyGenerationParameters
 import org.bouncycastle.openpgp.*
+import org.bouncycastle.openpgp.PGPException
 import org.bouncycastle.openpgp.operator.PGPDigestCalculator
 import org.bouncycastle.openpgp.operator.bc.*
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentSignerBuilder
 import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder
 import java.io.*
 import java.math.BigInteger
@@ -19,6 +21,7 @@ import java.security.SecureRandom
 import java.security.Security
 import java.security.SignatureException
 import java.util.*
+
 
 /**
  * Consider https://codeberg.org/PGPainless/pgpainless to reduce Bouncy parameters
@@ -152,18 +155,30 @@ object PGPUtils {
         return String(baos.toByteArray(), Charsets.US_ASCII)
     }
 
-    fun sign(content: String, secretKey: PGPSecretKey, passphrase: String): PGPSignature {
+    fun extractPrivateKey(secretKey: PGPSecretKey, passphrase: String): PGPPrivateKey {
         val decryptor = JcePBESecretKeyDecryptorBuilder().setProvider("BC").build(passphrase.toCharArray())
-        val privateKey = secretKey.extractPrivateKey(decryptor)
-        val signatureGenerator = PGPSignatureGenerator(
-            BcPGPContentSignerBuilder(
-                secretKey.getPublicKey().getAlgorithm(),
-                PGPUtil.SHA1
-            )
-        )
+        return secretKey.extractPrivateKey(decryptor)
+    }
+
+    fun sigGenerator(secretKey: PGPSecretKey): PGPSignatureGenerator = PGPSignatureGenerator(
+        BcPGPContentSignerBuilder(secretKey.publicKey.algorithm, PGPUtil.SHA256)
+    )
+
+    fun sign(content: String, secretKey: PGPSecretKey, passphrase: String): PGPSignature {
+        val privateKey = extractPrivateKey(secretKey, passphrase)
+        val signatureGenerator = sigGenerator(secretKey)
         signatureGenerator.init(PGPSignature.BINARY_DOCUMENT, privateKey)
         signatureGenerator.update(content.toByteArray(Charsets.UTF_8))
         return signatureGenerator.generate()
+    }
+
+    fun signPublicKey(toSign: PGPPublicKey, secretKey: PGPSecretKey, passphrase: String): PGPPublicKey {
+        val privateKey = extractPrivateKey(secretKey, passphrase)
+        val signatureGenerator = sigGenerator(secretKey)
+        signatureGenerator.init(PGPSignature.DEFAULT_CERTIFICATION, privateKey)
+        val id = toSign.getUserIDs().asSequence().firstOrNull() ?: throw Exception("No ID on target key")
+        val signature = signatureGenerator.generateCertification(id, toSign)
+        return PGPPublicKey.addCertification(toSign, id, signature)
     }
 }
 

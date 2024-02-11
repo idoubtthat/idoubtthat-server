@@ -6,9 +6,11 @@ import idoubtthat.pgp.PGPUtils
 import idoubtthat.values.*
 import org.bouncycastle.openpgp.PGPPublicKey
 import org.bouncycastle.openpgp.PGPSecretKey
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class PGPTest {
@@ -42,6 +44,21 @@ class PGPTest {
         val tomKey = PGPUtils.secretKeyFromArmoredString(TestData.testSecretKey).publicKey
         val valid2 = PGPUtils.verify(sig2, tomKey, TestData.text)
         assertTrue(valid2)
+    }
+
+    @Test
+    fun testKeySign() {
+        val tomKey = PGPUtils.secretKeyFromArmoredString(TestData.testSecretKey)
+        val newPubKey = PGPUtils.generate("dave@idobutthat.info", "test").publicKey
+        assertNotNull(newPubKey.userIDs.asSequence().firstOrNull())
+        val initialSigs = newPubKey.signatures.asSequence().toList()
+        assertEquals(1, initialSigs.size)
+        assertTrue(initialSigs.any { it.keyID == newPubKey.keyID })
+        assertFalse(initialSigs.any { it.keyID == tomKey.keyID })
+        val signed = PGPUtils.signPublicKey(newPubKey, tomKey, TestData.passphrase)
+        val newSigs =  signed.signatures.asSequence().toList()
+        assertEquals(2, newSigs.size)
+        assertTrue(newSigs.any { it.keyID == tomKey.keyID })
     }
 
     @Test

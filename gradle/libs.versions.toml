@@ -7,7 +7,7 @@ guava = "33.0.0-jre"
 junit-jupiter-engine = "5.10.0"
 jackson = "2.16.1"
 bouncycastle = "1.77"
-ktor = "2.3.7"
+ktor = "2.3.8"
 exposed = "0.41.1"
 h2 = "2.2.220"
 hikaricp = "5.0.1"
@@ -20,6 +20,8 @@ junit = "5.8.1"
 hamcrest = "2.2"
 
 [libraries]
+ktor_client = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
+ktor_client_cio = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit_jupiter_engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
 junit_kotlin = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
