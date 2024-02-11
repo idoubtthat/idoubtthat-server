@@ -1,4 +1,3 @@
-/*
 val ktorVersion: String by rootProject.extra("")
 
 
@@ -24,18 +23,6 @@ dependencies {
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // This dependency is used by the application.
-    implementation(libs.guava)
-    implementation(libs.jackson.jsr310)
-    implementation(libs.jackson.kotlin)
-    implementation(libs.bouncycastle)
-}
-
-// Apply a specific Java toolchain to ease working on different environments.
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
 }
 
 application {
@@ -47,4 +34,3 @@ tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
-*/

@@ -1,4 +1,3 @@
-/*
 import org.jooq.meta.jaxb.*
 
 val ktor_version: String by project
@@ -24,7 +23,7 @@ buildscript {
 plugins {
     application
     idea
-    kotlin("jvm") version "1.9.22"
+    alias(libs.plugins.kotlin.jvm)
     id("org.jooq.jooq-codegen-gradle") version "3.19.3"
 }
 
@@ -104,5 +103,3 @@ tasks.test {
 kotlin {
     jvmToolchain(21)
 }
-
- */
