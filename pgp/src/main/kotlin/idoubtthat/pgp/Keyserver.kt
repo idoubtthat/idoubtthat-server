@@ -15,8 +15,7 @@ class Keyserver(val server: String = "https://keys.openpgp.org") {
     }
 
     suspend fun get(id: Long): PGPPublicKey {
-        val l = hexId(id)
-        val resp = client.get("$server/vks/v1/by-keyid/$l")
+        val resp = client.get("$server/vks/v1/by-keyid/${hexId(id)}")
         return PGPUtils.publicKeyFromArmoredString(resp.bodyAsText(Charsets.US_ASCII))
     }
 
@@ -29,9 +28,13 @@ class Keyserver(val server: String = "https://keys.openpgp.org") {
         }
     }
 
+    /**
+     * Email address must be a clean email address, not a key userId.
+     * Use PGPUtils::userEmail to ensure this if needed
+     */
     suspend fun getByEmail(email: String): PGPPublicKey {
-        val l = URLEncoder.encode(email, Charsets.UTF_8)
-        val url = Url("$server/vks/v1/by-email/$l")
+        val urlEncodedEmail = URLEncoder.encode(email, Charsets.UTF_8)
+        val url = Url("$server/vks/v1/by-email/$urlEncodedEmail")
         val resp = client.get(url)
         return PGPUtils.publicKeyFromArmoredString(resp.bodyAsText(Charsets.US_ASCII))
     }

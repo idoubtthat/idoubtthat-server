@@ -78,6 +78,18 @@ object PGPUtils {
         Security.addProvider(org.bouncycastle.jce.provider.BouncyCastleProvider())
     }
 
+    const val emailRegexString = "[a-zA-Z0-9+._%\\-]{1,256}" +
+            "@" +
+            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+            "(" +
+            "\\." +
+            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+            ")+"
+
+
+    val emailRegex = Regex(emailRegexString)
+    val emailInIdRegex = Regex("<($emailRegexString)>\$")
+
     fun generate(
         id: String,
         passphrase: String,
@@ -189,20 +201,11 @@ object PGPUtils {
     }
 
     fun userEmail(userId: String): String {
-        val emailRegexString = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
-                "\\@" +
-                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-                "(" +
-                "\\." +
-                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
-                ")+"
-        val emailInId = Regex("<($emailRegexString)>\$")
-        val stdId = emailInId.find(userId)
+        val stdId = emailInIdRegex.find(userId)
         if (stdId != null) {
             return stdId.groups[1]!!.value
         }
 
-        val emailRegex = Regex(emailRegexString)
         val bareEmail = emailRegex.matchEntire(userId)
         if (bareEmail != null) {
             return userId
