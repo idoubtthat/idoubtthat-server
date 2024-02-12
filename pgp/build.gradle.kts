@@ -13,6 +13,8 @@ dependencies {
     testImplementation(libs.junit.jupiter.engine)
     testRuntimeOnly(libs.junit.runtime)
 
+    implementation(libs.ktor.client)
+    implementation(libs.ktor.client.cio)
     implementation(libs.jackson.jsr310)
     implementation(libs.jackson.kotlin)
     implementation(libs.bouncycastle)

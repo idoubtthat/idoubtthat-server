@@ -14,11 +14,13 @@ import org.bouncycastle.openpgp.operator.PGPDigestCalculator
 import org.bouncycastle.openpgp.operator.bc.*
 import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder
 import java.io.*
+import java.lang.IllegalArgumentException
 import java.math.BigInteger
 import java.security.SecureRandom
 import java.security.Security
 import java.security.SignatureException
 import java.util.*
+
 
 /**
  * Consider https://codeberg.org/PGPainless/pgpainless to reduce Bouncy parameters
@@ -75,6 +77,18 @@ object PGPUtils {
     init {
         Security.addProvider(org.bouncycastle.jce.provider.BouncyCastleProvider())
     }
+
+    const val emailRegexString = "[a-zA-Z0-9+._%\\-]{1,256}" +
+            "@" +
+            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+            "(" +
+            "\\." +
+            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+            ")+"
+
+
+    val emailRegex = Regex(emailRegexString)
+    val emailInIdRegex = Regex("<($emailRegexString)>\$")
 
     fun generate(
         id: String,
@@ -138,6 +152,14 @@ object PGPUtils {
         return pgpPub.publicKey
     }
 
+    fun publicKeyToArmoredString(key: PGPPublicKey): String {
+        val baos = ByteArrayOutputStream()
+        val out = ArmoredOutputStream(baos)
+        key.encode(out)
+        out.close()
+        return String(baos.toByteArray(), Charsets.US_ASCII)
+    }
+
     fun secretKeyFromArmoredString(key: String): PGPSecretKey {
         val ins = PGPUtil.getDecoderStream(ByteArrayInputStream(key.toByteArray(Charsets.US_ASCII)))
         val pgpSec = PGPSecretKeyRing(ins, fingerprintCalculator)
@@ -152,19 +174,43 @@ object PGPUtils {
         return String(baos.toByteArray(), Charsets.US_ASCII)
     }
 
-    fun sign(content: String, secretKey: PGPSecretKey, passphrase: String): PGPSignature {
+    fun extractPrivateKey(secretKey: PGPSecretKey, passphrase: String): PGPPrivateKey {
         val decryptor = JcePBESecretKeyDecryptorBuilder().setProvider("BC").build(passphrase.toCharArray())
-        val privateKey = secretKey.extractPrivateKey(decryptor)
-        val signatureGenerator = PGPSignatureGenerator(
-            BcPGPContentSignerBuilder(
-                secretKey.getPublicKey().getAlgorithm(),
-                PGPUtil.SHA1
-            )
-        )
+        return secretKey.extractPrivateKey(decryptor)
+    }
+
+    fun sigGenerator(secretKey: PGPSecretKey): PGPSignatureGenerator = PGPSignatureGenerator(
+        BcPGPContentSignerBuilder(secretKey.publicKey.algorithm, PGPUtil.SHA256)
+    )
+
+    fun sign(content: String, secretKey: PGPSecretKey, passphrase: String): PGPSignature {
+        val privateKey = extractPrivateKey(secretKey, passphrase)
+        val signatureGenerator = sigGenerator(secretKey)
         signatureGenerator.init(PGPSignature.BINARY_DOCUMENT, privateKey)
         signatureGenerator.update(content.toByteArray(Charsets.UTF_8))
         return signatureGenerator.generate()
     }
-}
 
+    fun signPublicKey(toSign: PGPPublicKey, secretKey: PGPSecretKey, passphrase: String): PGPPublicKey {
+        val privateKey = extractPrivateKey(secretKey, passphrase)
+        val signatureGenerator = sigGenerator(secretKey)
+        signatureGenerator.init(PGPSignature.DEFAULT_CERTIFICATION, privateKey)
+        val id = toSign.getUserIDs().asSequence().firstOrNull() ?: throw Exception("No ID on target key")
+        val signature = signatureGenerator.generateCertification(id, toSign)
+        return PGPPublicKey.addCertification(toSign, id, signature)
+    }
+
+    fun userEmail(userId: String): String {
+        val stdId = emailInIdRegex.find(userId)
+        if (stdId != null) {
+            return stdId.groups[1]!!.value
+        }
+
+        val bareEmail = emailRegex.matchEntire(userId)
+        if (bareEmail != null) {
+            return userId
+        }
+        throw IllegalArgumentException("No email")
+    }
+}
 
