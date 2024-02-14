@@ -1,8 +1,8 @@
-package info.idoubtthat.db.op.user
+package db.op.user
 
-import info.idoubtthat.db.op.WriteOp
-import info.idoubtthat.db.schema.tables.references.USERS
-import info.idoubtthat.models.UserDAO
+import db.schema.tables.references.USERS
+import db.op.WriteOp
+import db.models.UserDAO
 import org.jooq.Configuration
 import java.time.LocalDateTime
 

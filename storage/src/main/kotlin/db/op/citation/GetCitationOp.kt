@@ -1,8 +1,8 @@
-package info.idoubtthat.db.op.citation
+package db.op.citation
 
-import info.idoubtthat.db.op.ReadOp
-import info.idoubtthat.db.schema.tables.references.CITATIONS
-import info.idoubtthat.models.CitationDAO
+import db.schema.tables.references.CITATIONS
+import db.op.ReadOp
+import db.models.CitationDAO
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import java.util.*

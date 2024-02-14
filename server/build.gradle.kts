@@ -1,33 +1,31 @@
-val ktorVersion: String by rootProject.extra("")
-
-
 plugins {
-    // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     alias(libs.plugins.kotlin.jvm)
-
-    // Apply the application plugin to add support for building a CLI application in Java.
-    application
+    alias(libs.plugins.ktor)
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
 dependencies {
-    // Use the Kotlin JUnit 5 integration.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    implementation(project(":storage"))
 
-    // Use the JUnit 5 integration.
+    implementation(libs.ktor.server.call.logging)
+    implementation(libs.ktor.server.content.negotiation)
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.cors)
+    implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.openapi)
+    implementation(libs.ktor.server.serialization.jackson)
+    implementation(libs.ktor.server.swagger)
+    implementation(libs.logback)
+
+    testImplementation(libs.ktor.server.tests)
     testImplementation(libs.junit.jupiter.engine)
-
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
 }
 
 application {
-    // Define the main class for the application.
-    mainClass.set("idoubtthat.server.AppKt")
+    mainClass.set("idoubtthat.server.ApplicationKt")
 }
 
 tasks.named<Test>("test") {

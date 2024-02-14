@@ -1,7 +1,7 @@
 package info.idoubtthat.db
 
-import info.idoubtthat.models.CitationDAO
-import info.idoubtthat.models.UserDAO
+import db.models.CitationDAO
+import db.models.UserDAO
 
 interface DataService {
     fun getUser(dao: UserDAO): UserDAO?

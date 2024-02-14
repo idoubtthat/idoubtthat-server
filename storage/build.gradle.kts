@@ -1,13 +1,5 @@
 import org.jooq.meta.jaxb.*
 
-val ktor_version: String by project
-val flyway_version: String by project
-val exposed_version: String by project
-val logback_version: String by project
-val jooq_version: String by project
-val h2_version: String by project
-val junit_version: String by project
-
 buildscript {
     repositories {
         mavenLocal()
@@ -15,39 +7,32 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.jooq:jooq-codegen:3.19.3")
-        classpath("mysql:mysql-connector-java:8.0.33")
+        classpath(libs.jooq.codegen)
+        classpath(libs.mysql)
     }
 }
 
 plugins {
-    application
-    idea
+    alias(libs.plugins.docker.compose)
+    alias(libs.plugins.flyway)
     alias(libs.plugins.kotlin.jvm)
-    id("org.jooq.jooq-codegen-gradle") version "3.19.3"
+    alias(libs.plugins.jooq.codegen)
 }
 
-sourceSets {
-    main {
-        kotlin {
-            srcDirs("src/database-bindings/kotlin")
-        }
-    }
+flyway {
+    driver = "com.mysql.cj.jdbc.Driver"
+    url = "jdbc:mysql://localhost:9217/citation"
+    user = "root"
+    password = "secret"
 }
 
-idea {
-    module {
-        sourceDirs.add(file("src/database-bindings/kotlin"))
-    }
-}
-
-
+tasks.flywayMigrate.get().dependsOn(tasks.composeUp.get())
 
 jooq {
     configuration {
         jdbc {
             driver = "com.mysql.cj.jdbc.Driver"
-            url = "jdbc:mysql://localhost/citation"
+            url = "jdbc:mysql://localhost:9217/citation"
 
             // "username" is a valid synonym for "user"
             user = "root"
@@ -63,21 +48,19 @@ jooq {
             }
 
             target {
-                packageName = "info.idoubtthat.db.schema"
+                packageName = "db.schema"
 
-                directory = "src/database-bindings/kotlin"
+                directory = "src/main/kotlin"
             }
         }
     }
 }
 
-application {
-    mainClass.set("info.idoubtthat.ApplicationKt")
-}
+tasks.jooqCodegen.get().dependsOn(tasks.flywayMigrate.get())
+tasks.jooqCodegen.get().finalizedBy(tasks.composeDownForced.get())
+
 group = "info.idoubtthat"
 version = "1.0-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_21
-java.targetCompatibility = JavaVersion.VERSION_21
 
 
 repositories {
@@ -86,20 +69,16 @@ repositories {
 
 
 dependencies {
-    implementation("mysql:mysql-connector-java:8.0.33")
-    implementation("ch.qos.logback:logback-classic:1.4.14")
-    implementation("com.zaxxer:HikariCP:5.1.0")
-    implementation("org.flywaydb:flyway-core:10.7.2")
-    implementation("com.sksamuel.hoplite:hoplite-hocon:2.7.5")
-    implementation("org.jooq:jooq:3.19.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
-    testImplementation ("org.junit.jupiter:junit-jupiter-engine:5.10.2")
-
+    implementation(libs.flyway)
+    implementation(libs.hikari)
+    implementation(libs.jooq)
+    implementation(libs.mysql)
 }
 
 tasks.test {
     useJUnitPlatform()
 }
+
 kotlin {
     jvmToolchain(21)
 }
