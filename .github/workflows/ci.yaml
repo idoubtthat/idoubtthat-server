@@ -22,13 +22,14 @@ jobs:
           distribution: 'corretto'
           java-version: '21'
 
-      - name: Build Kotlin project
+      - name: Run build the server
         run: ./gradlew assemble
 
-      - name: Docker Compose Action
-        uses: isbang/compose-action@v1.5.1
-        with:
-          compose-file: "docker-compose.yaml"
+      - name: Run the pgp tests
+        run: ./gradlew pgp:test
 
-      - name: Run unit tests
-        run: ./gradlew test
+      - name: Run the storage tests
+        run: ./gradlew storage:test
+
+      - name: Run the server
+        run: ./gradlew server:test
