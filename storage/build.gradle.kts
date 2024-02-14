@@ -72,12 +72,21 @@ dependencies {
     implementation(libs.flyway)
     implementation(libs.hikari)
     implementation(libs.jooq)
+    implementation(libs.logback)
     implementation(libs.mysql)
+
+    testImplementation(libs.junit.jupiter.engine)
+    testImplementation(libs.junit.kotlin)
+
+    testRuntimeOnly(libs.junit.runtime)
 }
 
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks.test.get().dependsOn(tasks.composeUp.get())
+tasks.test.get().finalizedBy(tasks.composeDownForced.get())
 
 kotlin {
     jvmToolchain(21)

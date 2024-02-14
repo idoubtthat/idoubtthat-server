@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
 }
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
@@ -22,6 +21,6 @@ dependencies {
 }
 
 
-tasks.named<Test>("test") {
+tasks.test {
     useJUnitPlatform()
 }

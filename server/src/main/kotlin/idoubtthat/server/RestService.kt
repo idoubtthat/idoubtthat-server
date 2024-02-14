@@ -21,7 +21,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 import java.util.*
-import kotlin.time.measureTime
 
 class RestService(
     serverConfig: ServerConfig,
@@ -50,9 +49,6 @@ class RestService(
         routing {
             swaggerUI(path = "api/v1/swagger")
             openAPI(path = "api/v1/openapi")
-            get("/") {
-                call.respondText("Hello World!")
-            }
 
             route("/api/v1") {
                 route("/user") {

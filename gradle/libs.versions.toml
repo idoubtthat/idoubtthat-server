@@ -29,6 +29,9 @@ junit_kotlin = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
 junit_runtime = { module = "org.junit.platform:junit-platform-launcher" }
 ktor_client = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
 ktor_client_cio = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
+ktor_client_logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor_client_content_negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor_client_serialization_json = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor" }
 ktor_server_call_logging = { module = "io.ktor:ktor-server-call-logging-jvm", version.ref = "ktor" }
 ktor_server_content_negotiation = { module = "io.ktor:ktor-server-content-negotiation-jvm", version.ref = "ktor" }
 ktor_server_cors = { module = "io.ktor:ktor-server-cors-jvm", version.ref = "ktor" }

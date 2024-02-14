@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.docker.compose)
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
 }
@@ -20,15 +21,24 @@ dependencies {
     implementation(libs.ktor.server.swagger)
     implementation(libs.logback)
 
-    testImplementation(libs.ktor.server.tests)
     testImplementation(libs.junit.jupiter.engine)
+    testImplementation(libs.junit.kotlin)
+    testImplementation(libs.ktor.client)
+    testImplementation(libs.ktor.client.cio)
+    testImplementation(libs.ktor.client.logging)
+    testImplementation(libs.ktor.client.content.negotiation)
+    testImplementation(libs.ktor.client.serialization.json)
+
+    testRuntimeOnly(libs.junit.runtime)
 }
 
 application {
     mainClass.set("idoubtthat.server.ApplicationKt")
 }
 
-tasks.named<Test>("test") {
-    // Use JUnit Platform for unit tests.
+tasks.test {
     useJUnitPlatform()
 }
+
+tasks.test.get().dependsOn(tasks.composeUp.get())
+tasks.test.get().finalizedBy(tasks.composeDownForced.get())
