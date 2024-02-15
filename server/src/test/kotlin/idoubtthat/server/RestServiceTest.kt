@@ -69,7 +69,6 @@ class RestServiceTest {
     }
 
     @Test
-    @Disabled("This won't pass until the indexes are fixed")
     fun testCitationCRUD() {
         runBlocking {
             val user = User(
@@ -78,6 +77,7 @@ class RestServiceTest {
                 "Smith"
             )
             val createResponse = client.post("user") {
+                contentType(ContentType.Application.Json)
                 setBody(user)
             }
             assertEquals(HttpStatusCode.OK, createResponse.status)

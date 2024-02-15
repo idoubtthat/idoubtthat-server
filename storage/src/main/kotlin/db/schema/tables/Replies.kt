@@ -6,7 +6,7 @@ package db.schema.tables
 
 import db.schema.Citation
 import db.schema.indexes.REPLIES_REPLY_ID
-import db.schema.indexes.REPLIES_REPLY_ID_2
+import db.schema.keys.KEY_REPLIES_PRIMARY
 import db.schema.tables.records.RepliesRecord
 
 import java.time.LocalDateTime
@@ -30,6 +30,7 @@ import org.jooq.Stringly
 import org.jooq.Table
 import org.jooq.TableField
 import org.jooq.TableOptions
+import org.jooq.UniqueKey
 import org.jooq.impl.DSL
 import org.jooq.impl.SQLDataType
 import org.jooq.impl.TableImpl
@@ -75,7 +76,7 @@ open class Replies(
     /**
      * The column <code>citation.replies.reply_id</code>.
      */
-    val REPLY_ID: TableField<RepliesRecord, String?> = createField(DSL.name("reply_id"), SQLDataType.VARCHAR(36), this, "")
+    val REPLY_ID: TableField<RepliesRecord, String?> = createField(DSL.name("reply_id"), SQLDataType.VARCHAR(36).nullable(false), this, "")
 
     /**
      * The column <code>citation.replies.citation_id</code>.
@@ -100,7 +101,7 @@ open class Replies(
     /**
      * The column <code>citation.replies.valid_to</code>.
      */
-    val VALID_TO: TableField<RepliesRecord, LocalDateTime?> = createField(DSL.name("valid_to"), SQLDataType.LOCALDATETIME(0), this, "")
+    val VALID_TO: TableField<RepliesRecord, LocalDateTime?> = createField(DSL.name("valid_to"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "")
 
     private constructor(alias: Name, aliased: Table<RepliesRecord>?): this(alias, null, null, null, aliased, null, null)
     private constructor(alias: Name, aliased: Table<RepliesRecord>?, parameters: Array<Field<*>?>?): this(alias, null, null, null, aliased, parameters, null)
@@ -121,7 +122,8 @@ open class Replies(
      */
     constructor(): this(DSL.name("replies"), null)
     override fun getSchema(): Schema? = if (aliased()) null else Citation.CITATION
-    override fun getIndexes(): List<Index> = listOf(REPLIES_REPLY_ID, REPLIES_REPLY_ID_2)
+    override fun getIndexes(): List<Index> = listOf(REPLIES_REPLY_ID)
+    override fun getPrimaryKey(): UniqueKey<RepliesRecord> = KEY_REPLIES_PRIMARY
     override fun `as`(alias: String): Replies = Replies(DSL.name(alias), this)
     override fun `as`(alias: Name): Replies = Replies(alias, this)
     override fun `as`(alias: Table<*>): Replies = Replies(alias.qualifiedName, this)

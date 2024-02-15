@@ -102,7 +102,7 @@ class RestService(
                         )
                         val fetchedCitation = dataService.getCitation(requestedCitation)
                         if (fetchedCitation != null) {
-                            call.respond(Citation(requestedCitation.id!!, requestedCitation.userId!!, requestedCitation.url!!, requestedCitation.commentary!!))
+                            call.respond(Citation(fetchedCitation.id!!, fetchedCitation.userId!!, fetchedCitation.url!!, fetchedCitation.commentary!!))
                         }
                     }
                 }
