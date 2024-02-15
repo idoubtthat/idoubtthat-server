@@ -1,8 +1,8 @@
-package info.idoubtthat.db.op.citation
+package db.op.citation
 
-import info.idoubtthat.db.op.WriteOp
-import info.idoubtthat.db.schema.tables.references.CITATIONS
-import info.idoubtthat.models.CitationDAO
+import db.schema.tables.references.CITATIONS
+import db.op.WriteOp
+import db.models.CitationDAO
 import org.jooq.Configuration
 import java.time.LocalDateTime
 

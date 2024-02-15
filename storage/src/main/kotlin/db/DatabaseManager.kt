@@ -1,18 +1,15 @@
-package info.idoubtthat.db
+package db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import info.idoubtthat.db.op.ReadOp
-import info.idoubtthat.server.Environment
+import db.op.ReadOp
 import org.flywaydb.core.Flyway
 import org.jooq.TransactionalRunnable
-import org.jooq.impl.*
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.jooq.impl.DSL
 
-class DatabaseManager(val environment: Environment) {
+class DatabaseManager(val databaseConfig: DatabaseConfig) {
     private val config = HikariConfig().apply {
-        jdbcUrl = "jdbc:mysql://${environment.db.host}:${environment.db.port}/citation"
+        jdbcUrl = "jdbc:mysql://${databaseConfig.host}:${databaseConfig.port}/citation"
         username = "root"
         password = "secret"
         maxLifetime = 1_200_000
@@ -49,9 +46,5 @@ class DatabaseManager(val environment: Environment) {
         val connection = datasource.connection
         val dsl = DSL.using(connection)
         return op.run(dsl)
-    }
-
-    companion object {
-        val logger: Logger = LoggerFactory.getLogger(DatabaseManager::class.java)
     }
 }

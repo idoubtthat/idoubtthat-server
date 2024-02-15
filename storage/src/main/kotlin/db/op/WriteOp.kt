@@ -1,6 +1,6 @@
-package info.idoubtthat.db.op
+package db.op
 
-import info.idoubtthat.models.DAO
+import db.models.DAO
 import org.jooq.TransactionalRunnable
 
 abstract class WriteOp<T: DAO>(val dao: T): TransactionalRunnable

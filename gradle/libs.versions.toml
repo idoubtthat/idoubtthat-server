@@ -2,33 +2,51 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
+docker-compose = "0.17.6"
 kotlin = "1.9.22"
 guava = "33.0.0-jre"
 junit-jupiter-engine = "5.10.2"
 jackson = "2.16.1"
 bouncycastle = "1.77"
 ktor = "2.3.8"
-exposed = "0.41.1"
-h2 = "2.2.220"
-hikaricp = "5.0.1"
+hikari = "5.0.1"
 flyway = "7.15.0"
 jooq = "3.19.3"
 logback = "1.4.12"
-slf4j = "2.0.9"
-log4j = "2.19.0"
-junit = "5.8.1"
-hamcrest = "2.2"
+mysql = "8.0.33"
 
 [libraries]
-ktor_client = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
-ktor_client_cio = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
+bouncycastle = { module = "org.bouncycastle:bcpg-jdk18on", version.ref = "bouncycastle" }
+flyway = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
+hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
+jackson_jsr310 = {  module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson"  }
+jackson_kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+jooq = { module = "org.jooq:jooq", version.ref = "jooq" }
+jooq_codegen = { module = "org.jooq:jooq-codegen", version.ref = "jooq" }
 junit_jupiter_engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
 junit_kotlin = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
 junit_runtime = { module = "org.junit.platform:junit-platform-launcher" }
-jackson_jsr310 = {  module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson"  }
-jackson_kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
-bouncycastle = { module = "org.bouncycastle:bcpg-jdk18on", version.ref = "bouncycastle" }
+ktor_client = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
+ktor_client_cio = { module = "io.ktor:ktor-client-cio-jvm", version.ref = "ktor" }
+ktor_client_logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor_client_content_negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor_client_serialization_json = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor" }
+ktor_server_call_logging = { module = "io.ktor:ktor-server-call-logging-jvm", version.ref = "ktor" }
+ktor_server_content_negotiation = { module = "io.ktor:ktor-server-content-negotiation-jvm", version.ref = "ktor" }
+ktor_server_cors = { module = "io.ktor:ktor-server-cors-jvm", version.ref = "ktor" }
+ktor_server_core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
+ktor_server_netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
+ktor_server_openapi = { module = "io.ktor:ktor-server-openapi", version.ref = "ktor" }
+ktor_server_serialization_jackson = { module = "io.ktor:ktor-serialization-jackson-jvm", version.ref = "ktor" }
+ktor_server_swagger= { module = "io.ktor:ktor-server-swagger-jvm", version.ref = "ktor" }
+ktor_server_tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor" }
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+mysql = { module = "mysql:mysql-connector-java", version.ref = "mysql" }
 
 [plugins]
+docker_compose = { id = "com.avast.gradle.docker-compose", version.ref = "docker-compose"}
+flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
+jooq_codegen = { id = "org.jooq.jooq-codegen-gradle", version.ref = "jooq" }
 kotlin_jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ktor = { id = "io.ktor.plugin", version.ref = "ktor" }

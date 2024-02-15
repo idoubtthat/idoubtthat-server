@@ -1,4 +1,4 @@
-package info.idoubtthat.db.op
+package db.op
 
 import org.jooq.DSLContext
 
