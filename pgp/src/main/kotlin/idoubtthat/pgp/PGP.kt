@@ -1,7 +1,7 @@
 package idoubtthat.pgp
 
 import idoubtthat.values.Signable
-import idoubtthat.values.SignedReource
+import idoubtthat.values.SignedResource
 import idoubtthat.values.User
 import org.bouncycastle.bcpg.ArmoredOutputStream
 import org.bouncycastle.bcpg.HashAlgorithmTags
@@ -43,7 +43,7 @@ interface KeyStore {
 }
 
 class PGP(val keyStore: KeyStore) {
-    fun isValid(signed: SignedReource): Boolean {
+    fun isValid(signed: SignedResource): Boolean {
         val sig = PGPUtils.readDetachedSignature(signed.signature)
         if (!keyStore.userOwnsKey(signed.content.signedBy, sig.keyID)) {
             return false
@@ -52,14 +52,14 @@ class PGP(val keyStore: KeyStore) {
         return PGPUtils.verify(sig, key, signed.content.write())
     }
 
-    fun sign(content: Signable, passphrase: String): SignedReource {
+    fun sign(content: Signable, passphrase: String): SignedResource {
         val key = keyStore.getSecret(content.signedBy) ?: throw Exception("no secret key found")
         return sign(content, key, passphrase)
     }
 
-    fun sign(content: Signable, key: PGPSecretKey, passphrase: String): SignedReource {
+    fun sign(content: Signable, key: PGPSecretKey, passphrase: String): SignedResource {
         val sig = PGPUtils.sign(content.write(), key, passphrase)
-        return SignedReource(content, PGPUtils.writeDetachedSignature(sig))
+        return SignedResource(content, PGPUtils.writeDetachedSignature(sig))
     }
 }
 
