@@ -39,7 +39,7 @@ data class Signable(
     fun write(): String = Serializer.write(this)
 }
 
-data class SignedReource(
+data class SignedResource(
     val content: Signable,
     val signature: String
 )
