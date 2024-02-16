@@ -6,7 +6,7 @@ package db.schema.tables
 
 import db.schema.Citation
 import db.schema.indexes.CITATIONS_CITATION_ID
-import db.schema.indexes.CITATIONS_CITATION_ID_2
+import db.schema.keys.KEY_CITATIONS_PRIMARY
 import db.schema.tables.records.CitationsRecord
 
 import java.time.LocalDateTime
@@ -30,6 +30,7 @@ import org.jooq.Stringly
 import org.jooq.Table
 import org.jooq.TableField
 import org.jooq.TableOptions
+import org.jooq.UniqueKey
 import org.jooq.impl.DSL
 import org.jooq.impl.SQLDataType
 import org.jooq.impl.TableImpl
@@ -75,7 +76,7 @@ open class Citations(
     /**
      * The column <code>citation.citations.citation_id</code>.
      */
-    val CITATION_ID: TableField<CitationsRecord, String?> = createField(DSL.name("citation_id"), SQLDataType.VARCHAR(36), this, "")
+    val CITATION_ID: TableField<CitationsRecord, String?> = createField(DSL.name("citation_id"), SQLDataType.VARCHAR(36).nullable(false), this, "")
 
     /**
      * The column <code>citation.citations.user_id</code>.
@@ -95,7 +96,7 @@ open class Citations(
     /**
      * The column <code>citation.citations.valid_from</code>.
      */
-    val VALID_FROM: TableField<CitationsRecord, LocalDateTime?> = createField(DSL.name("valid_from"), SQLDataType.LOCALDATETIME(0), this, "")
+    val VALID_FROM: TableField<CitationsRecord, LocalDateTime?> = createField(DSL.name("valid_from"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "")
 
     /**
      * The column <code>citation.citations.valid_to</code>.
@@ -121,7 +122,8 @@ open class Citations(
      */
     constructor(): this(DSL.name("citations"), null)
     override fun getSchema(): Schema? = if (aliased()) null else Citation.CITATION
-    override fun getIndexes(): List<Index> = listOf(CITATIONS_CITATION_ID, CITATIONS_CITATION_ID_2)
+    override fun getIndexes(): List<Index> = listOf(CITATIONS_CITATION_ID)
+    override fun getPrimaryKey(): UniqueKey<CitationsRecord> = KEY_CITATIONS_PRIMARY
     override fun `as`(alias: String): Citations = Citations(DSL.name(alias), this)
     override fun `as`(alias: Name): Citations = Citations(alias, this)
     override fun `as`(alias: Table<*>): Citations = Citations(alias.qualifiedName, this)

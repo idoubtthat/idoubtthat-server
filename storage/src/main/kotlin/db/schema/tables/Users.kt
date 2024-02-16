@@ -6,7 +6,7 @@ package db.schema.tables
 
 import db.schema.Citation
 import db.schema.indexes.USERS_USER_ID
-import db.schema.indexes.USERS_USER_ID_2
+import db.schema.keys.KEY_USERS_PRIMARY
 import db.schema.tables.records.UsersRecord
 
 import java.time.LocalDateTime
@@ -30,6 +30,7 @@ import org.jooq.Stringly
 import org.jooq.Table
 import org.jooq.TableField
 import org.jooq.TableOptions
+import org.jooq.UniqueKey
 import org.jooq.impl.DSL
 import org.jooq.impl.SQLDataType
 import org.jooq.impl.TableImpl
@@ -75,7 +76,7 @@ open class Users(
     /**
      * The column <code>citation.users.user_id</code>.
      */
-    val USER_ID: TableField<UsersRecord, String?> = createField(DSL.name("user_id"), SQLDataType.VARCHAR(36), this, "")
+    val USER_ID: TableField<UsersRecord, String?> = createField(DSL.name("user_id"), SQLDataType.VARCHAR(36).nullable(false), this, "")
 
     /**
      * The column <code>citation.users.first_name</code>.
@@ -90,7 +91,7 @@ open class Users(
     /**
      * The column <code>citation.users.valid_from</code>.
      */
-    val VALID_FROM: TableField<UsersRecord, LocalDateTime?> = createField(DSL.name("valid_from"), SQLDataType.LOCALDATETIME(0), this, "")
+    val VALID_FROM: TableField<UsersRecord, LocalDateTime?> = createField(DSL.name("valid_from"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "")
 
     /**
      * The column <code>citation.users.valid_to</code>.
@@ -116,7 +117,8 @@ open class Users(
      */
     constructor(): this(DSL.name("users"), null)
     override fun getSchema(): Schema? = if (aliased()) null else Citation.CITATION
-    override fun getIndexes(): List<Index> = listOf(USERS_USER_ID, USERS_USER_ID_2)
+    override fun getIndexes(): List<Index> = listOf(USERS_USER_ID)
+    override fun getPrimaryKey(): UniqueKey<UsersRecord> = KEY_USERS_PRIMARY
     override fun `as`(alias: String): Users = Users(DSL.name(alias), this)
     override fun `as`(alias: Name): Users = Users(alias, this)
     override fun `as`(alias: Table<*>): Users = Users(alias.qualifiedName, this)

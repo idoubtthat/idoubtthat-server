@@ -3,7 +3,6 @@ package db
 import db.models.CitationDAO
 import db.models.UserDAO
 import info.idoubtthat.db.DataService
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.util.*
 import kotlin.test.assertEquals
@@ -26,7 +25,6 @@ class DataServiceMysqlImplTest {
     }
 
     @Test
-    @Disabled("This won't pass until the indexes are fixed")
     fun testCitationCRUD() {
         val user = UserDAO(
             UUID.randomUUID(),

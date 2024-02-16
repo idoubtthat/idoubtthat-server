@@ -1,8 +1,8 @@
 package db.op.citation
 
-import db.schema.tables.references.CITATIONS
-import db.op.WriteOp
 import db.models.CitationDAO
+import db.op.WriteOp
+import db.schema.tables.references.CITATIONS
 import org.jooq.Configuration
 import java.time.LocalDateTime
 

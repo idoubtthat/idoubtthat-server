@@ -4,7 +4,7 @@ CREATE TABLE users (
     last_name VARCHAR(50),
     valid_from DATETIME,
     valid_to DATETIME,
-    INDEX(user_id, valid_from),
+    PRIMARY KEY(user_id, valid_from),
     INDEX(user_id, valid_to)
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE citations (
     commentary TEXT,
     valid_from DATETIME,
     valid_to DATETIME,
-    INDEX(citation_id, valid_from),
+    PRIMARY KEY(citation_id, valid_from),
     INDEX(citation_id, valid_to)
 );
 
@@ -26,6 +26,6 @@ CREATE TABLE replies (
     reply_commentary TEXT,
     valid_from DATETIME,
     valid_to DATETIME,
-    INDEX(reply_id, valid_to),
+    PRIMARY KEY(reply_id, valid_to),
     INDEX(reply_id, valid_to)
 );

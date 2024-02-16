@@ -14,7 +14,6 @@ class DatabaseManager(val databaseConfig: DatabaseConfig) {
         password = "secret"
         maxLifetime = 1_200_000
         initializationFailTimeout = 1000 * 60 * 3
-        maximumPoolSize = 4
         isAutoCommit = false
         addDataSourceProperty("rewriteBatchedStatements", "true")
         addDataSourceProperty("useSSL", "true")
