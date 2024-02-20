@@ -11,7 +11,7 @@ bouncycastle = "1.77"
 ktor = "2.3.8"
 hikari = "5.1.0"
 flyway = "7.15.0"
-jooq = "3.19.3"
+jooq = "3.19.4"
 logback = "1.4.14"
 mysql = "8.0.33"
 
