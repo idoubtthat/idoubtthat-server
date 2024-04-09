@@ -12,7 +12,7 @@ ktor = "2.3.8"
 hikari = "5.1.0"
 flyway = "7.15.0"
 jooq = "3.19.4"
-logback = "1.5.0"
+logback = "1.5.4"
 mysql = "8.0.33"
 
 [libraries]
